@@ -1,5 +1,3 @@
-const { createClient } = require('@supabase/supabase-js');
-
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
@@ -24,19 +22,26 @@ module.exports = async (req, res) => {
     const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseKey) {
-      console.error('Variáveis de ambiente ausentes:', { url: !!supabaseUrl, key: !!supabaseKey });
-      return res.status(500).json({ erro: 'Erro de configuração do servidor' });
+      console.error('Vari\u00e1veis ausentes:', { url: !!supabaseUrl, key: !!supabaseKey });
+      return res.status(500).json({ erro: 'Erro de configura\u00e7\u00e3o do servidor' });
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey);
-
-    const { data, error } = await supabase.from('quiz_respostas').insert({
-      nome, email, telefone,
-      desafio, tempo_vendas, area, motivacao, cargo
+    const response = await fetch(supabaseUrl + '/rest/v1/quiz_respostas', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': supabaseKey,
+        'Authorization': 'Bearer ' + supabaseKey
+      },
+      body: JSON.stringify({
+        nome, email, telefone,
+        desafio, tempo_vendas, area, motivacao, cargo
+      })
     });
 
-    if (error) {
-      console.error('Erro Supabase:', JSON.stringify(error));
+    if (!response.ok) {
+      const text = await response.text();
+      console.error('Erro Supabase:', response.status, text);
       return res.status(500).json({ erro: 'Erro ao salvar resposta' });
     }
 
