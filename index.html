@@ -11,7 +11,7 @@
     content="vendas com humor, curso de vendas, Andréa Thomé, treinamento comercial, vendas, oratória, comunicação, técnica de vendas">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://vendedorcommuitohumor.com.br/">
-  <link rel="icon" type="image/png" href="https://andreathome.com.br/imagens/download.png">
+  <link rel="icon" type="image/png" href="https://andreathome.com.br/imagens/favicon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Vendedor Com Muito Humor — Andréa Thomé">
@@ -774,16 +774,19 @@
     .depo-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
+      gap: 32px;
       margin-top: 44px
     }
 
     .depo-grid img {
       width: 100%;
       height: auto;
+      max-height: 320px;
+      object-fit: contain;
       border-radius: var(--radius);
       box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
-      transition: transform .3s ease, box-shadow .3s ease
+      transition: transform .3s ease, box-shadow .3s ease;
+      background: var(--bg-soft)
     }
 
     .depo-grid img:hover {
@@ -1145,7 +1148,9 @@
 </div>
 
 <script>
-  var API_URL = '/api/salvar-resposta';
+  var API_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:'
+    ? 'https://andrea-thome.vercel.app/api/salvar-resposta'
+    : '/api/salvar-resposta';
   var stepAtual = 1;
   var totalSteps = 6;
   var respostas = {};
@@ -1229,14 +1234,21 @@
           cargo: respostas.q6
         })
       }).then(function(r) {
-        if (!r.ok) throw new Error('Erro no servidor');
+        if (!r.ok) {
+          return r.json().then(function(d) {
+            throw new Error(d.erro || 'Erro no servidor');
+          }).catch(function(e) {
+            if (e.message === 'Unexpected end of JSON input') throw new Error('Erro no servidor');
+            throw e;
+          });
+        }
         document.getElementById('quizSteps').style.display = 'none';
         document.getElementById('quizNav').style.display = 'none';
         document.getElementById('quizResultado').classList.add('active');
       }).catch(function(err) {
         btnNext.classList.remove('loading');
         btnNext.textContent = 'Ver aula';
-        mostrarErro('Erro ao salvar. Tente novamente.');
+        mostrarErro(err.message || 'Erro ao salvar. Tente novamente.');
         console.error(err);
       });
     }
