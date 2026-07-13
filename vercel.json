@@ -1,0 +1,8 @@
+{
+  "functions": {
+    "api/salvar-resposta.js": {
+      "memory": 128,
+      "maxDuration": 10
+    }
+  }
+}
