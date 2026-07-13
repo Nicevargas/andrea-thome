@@ -1089,11 +1089,11 @@
       <p class="progresso" id="progresso">Passo 1 de 6</p>
       <div class="quiz-step active" data-step="1">
         <p class="pergunta">1. Qual seu nome?</p>
-        <input type="text" id="inputNome" class="input-quiz" placeholder="Seu nome completo">
+        <input type="text" id="inputNome" class="input-quiz" placeholder="Seu nome completo" autocomplete="name">
         <p class="pergunta">2. Qual seu e-mail?</p>
-        <input type="email" id="inputEmail" class="input-quiz" placeholder="seu@email.com">
-        <p class="pergunta">3. Qual seu WhatsApp?</p>
-        <input type="tel" id="inputTelefone" class="input-quiz" placeholder="(11) 99999-9999">
+        <input type="email" id="inputEmail" class="input-quiz" placeholder="seu@email.com" autocomplete="email" inputmode="email">
+        <p class="pergunta">3. Qual seu WhatsApp com DDD?</p>
+        <input type="tel" id="inputTelefone" class="input-quiz" placeholder="(11) 99999-9999" autocomplete="tel" inputmode="numeric" maxlength="15">
       </div>
 
       <div class="quiz-step" data-step="2">
@@ -1212,7 +1212,10 @@
       var telefone = document.getElementById('inputTelefone').value.trim();
       if (!nome) { mostrarErro('Por favor, informe seu nome.'); return; }
       if (!email) { mostrarErro('Por favor, informe seu e-mail.'); return; }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { mostrarErro('E-mail inv\u00e1lido. Use o formato nome@provedor.com'); return; }
       if (!telefone) { mostrarErro('Por favor, informe seu WhatsApp.'); return; }
+      var digits = telefone.replace(/\D/g, '');
+      if (digits.length < 10 || digits.length > 11) { mostrarErro('Telefone inv\u00e1lido. Informe com DDD, ex: (11) 99999-9999'); return; }
       respostas.nome = nome;
       respostas.email = email;
       respostas.telefone = telefone;
@@ -1278,6 +1281,15 @@
       mostrarStep(stepAtual);
     }
   }
+
+  document.getElementById('inputTelefone').addEventListener('input', function() {
+    var d = this.value.replace(/\D/g, '').slice(0, 11);
+    var f = '';
+    if (d.length > 0) f = '(' + d.slice(0, Math.min(d.length, 2));
+    if (d.length > 2) f += ') ' + d.slice(2, Math.min(d.length, 7));
+    if (d.length > 7) f += '-' + d.slice(7);
+    this.value = f;
+  });
 
   document.querySelectorAll('.quiz-opcao').forEach(function(el) {
     el.addEventListener('click', function() {
