@@ -12,6 +12,7 @@
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://vendedorcommuitohumor.com.br/">
   <link rel="icon" type="image/png" href="https://andreathome.com.br/imagens/favicon.png">
+  <link rel="shortcut icon" href="https://andreathome.com.br/imagens/favicon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Vendedor Com Muito Humor — Andréa Thomé">
@@ -771,35 +772,50 @@
       display: none
     }
 
-    .depo-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 32px;
-      margin-top: 44px
+    .depo-scroll {
+      display: flex;
+      gap: 24px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding-bottom: 16px;
+      margin-top: 44px;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) #e2e4ec
     }
 
-    .depo-grid img {
-      width: 100%;
-      height: auto;
-      max-height: 320px;
-      object-fit: contain;
+    .depo-scroll::-webkit-scrollbar {
+      height: 6px
+    }
+
+    .depo-scroll::-webkit-scrollbar-track {
+      background: #e2e4ec;
+      border-radius: 3px
+    }
+
+    .depo-scroll::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 3px
+    }
+
+    .depo-scroll img {
+      flex-shrink: 0;
+      width: auto;
+      height: 320px;
       border-radius: var(--radius);
       box-shadow: 0 8px 24px rgba(0, 0, 0, .1);
       transition: transform .3s ease, box-shadow .3s ease;
-      background: var(--bg-soft)
+      scroll-snap-align: center
     }
 
-    .depo-grid img:hover {
-      transform: translateY(-4px) scale(1.02);
+    .depo-scroll img:hover {
+      transform: scale(1.03);
       box-shadow: 0 12px 32px rgba(0, 0, 0, .15)
     }
 
     @media(max-width:768px) {
-      .depo-grid {
-        grid-template-columns: 1fr;
-        max-width: 360px;
-        margin-left: auto;
-        margin-right: auto
+      .depo-scroll img {
+        height: 260px
       }
     }
 
@@ -977,10 +993,12 @@
         <span class="eyebrow">Depoimentos</span>
         <h2 id="depoimentos-title">Quem aplicou, recomenda.</h2>
       </div>
-      <div class="depo-grid">
+      <div class="depo-scroll">
         <img src="https://andreathome.com.br/imagens/depoimento1.jpg" alt="" loading="lazy">
         <img src="https://andreathome.com.br/imagens/depoimento2.jpg" alt="" loading="lazy">
         <img src="https://andreathome.com.br/imagens/depoimento3.jpg" alt="" loading="lazy">
+        <img src="https://andreathome.com.br/imagens/depoimento4.jpg" alt="" loading="lazy">
+        <img src="https://andreathome.com.br/imagens/depoimento5.jpg" alt="" loading="lazy">
       </div>
     </section>
 
