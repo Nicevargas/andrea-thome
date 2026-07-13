@@ -31,7 +31,8 @@ module.exports = async (req, res) => {
       headers: {
         'Content-Type': 'application/json',
         'apikey': supabaseKey,
-        'Authorization': 'Bearer ' + supabaseKey
+        'Authorization': 'Bearer ' + supabaseKey,
+        'Prefer': 'return=minimal'
       },
       body: JSON.stringify({
         nome, email, telefone,
@@ -42,12 +43,12 @@ module.exports = async (req, res) => {
     if (!response.ok) {
       const text = await response.text();
       console.error('Erro Supabase:', response.status, text);
-      return res.status(500).json({ erro: 'Erro ao salvar resposta' });
+      return res.status(500).json({ erro: 'Erro ao salvar: ' + response.status + ' - ' + text.slice(0, 100) });
     }
 
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('Erro interno:', err.message, err.stack);
-    return res.status(500).json({ erro: 'Erro interno do servidor' });
+    return res.status(500).json({ erro: 'Erro interno: ' + err.message });
   }
 };

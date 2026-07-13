@@ -1259,7 +1259,7 @@
           return r.json().then(function(d) {
             throw new Error(d.erro || 'Erro no servidor');
           }).catch(function(e) {
-            if (e.message === 'Unexpected end of JSON input') throw new Error('Erro no servidor');
+            if (e.message === 'Unexpected end of JSON input') { return r.text().then(function(t) { throw new Error(t.slice(0, 100)); }); }
             throw e;
           });
         }
